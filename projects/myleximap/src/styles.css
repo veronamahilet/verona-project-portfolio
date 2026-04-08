@@ -1,0 +1,65 @@
+.root {
+    -fx-background-color: black;
+}
+
+.FLayerLeft {
+    -fx-border-style: dashed;
+    -fx-border-width: 2px;
+    -fx-border-color: white;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+.FLayerCenter {
+    -fx-background-color: rgba(255, 255, 255, 0.136);
+    -fx-border-width: 2px;
+    -fx-border-color: rgba(255, 255, 255, 0.136);
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+.lftB_TopBlock, .lftB_CenterBlock, .lftB_BottomBlock {
+    -fx-background-color: rgba(255, 255, 255, 0.253);
+    -fx-border-width: 2px;
+    -fx-border-color: white;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+.lftB_TopB_TitleBloc, .lftB_CenterB_TitleBloc, .lftB_BottomB_TitleBloc {
+    -fx-border-width: 2px;
+    -fx-border-color: black;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+.lbl_lftB_TopTitle, .lbl_lftB_CenterTitle, .lbl_lftB_BottomTitle {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+.lbl_lftB_TopB_InfoStatus, .lbl_lftB_TopB_InfoStatusValue, .lbl_lftB_TopB_InfoWrdsProcess, .lbl_lftB_TopB_InfoWrdsProcessValue, .lbl_lftB_TopB_InfoUnquWrds, .lbl_lftB_TopB_InfoUnquWrdsValue,
+.lbl_lftB_CenterB_TotlStrdWrd,.lbl_lftB_CenterB_TotlStrdWrdValue,.lbl_lftB_CenterB_GnrlStrdWrds, .lbl_lftB_CenterB_GnrlStrdWrdsValue,.lbl_LftB_CenterB_DtatSze, .lbl_LftB_CenterB_DtatSzeValue,
+.lbl_LftB_BottomB_Header_InfoEmptySpce, .lbl_LftB_BottomB_Header_InfoList, .lbl_LftB_BottomB_Header_InfoBST, .lbl_LftB_BottomB_Header_InfoHashMap, .lbl_LftB_BottomB_TrainingTime_Info, .lbl_LftB_BottomB_TrainingTime_InfoListValue, .lbl_LftB_BottomB_TrainingTime_InfoBSTValue, .lbl_LftB_BottomB_TrainingTime_InfoHashMapValue,
+.lbl_LftB_BottomB_SrchTime_Info, .lbl_LftB_BottomB_SrchTime_InfoListValue, .lbl_LftB_BottomB_SrchTime_InfoBSTValue, .lbl_LftB_BottomB_SrchTime_InfoHashMapValue {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+.FLayerCenter_lbl_guide {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-style: dashed;
+    -fx-border-color: white;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+}
+.FLayerCenter_lbl_seeSentence {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-border-color: white;
+    -fx-border-radius: 15px;
+    -fx-background-radius: 15px;
+    -fx-background-color: rgba(0, 0, 0, 0.701)
+}
