@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> my litlle walking guy</title>
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+
+                font-weight: bold;
+            }
+            body {
+                height: 100vh;
+                width: 100%;
+
+                display: flex;
+                flex-direction: column;
+                justify-content:center;
+                align-items: center;
+                gap: 20px;
+
+                background-color: black;
+            }
+
+            main{
+                height: 400px;
+                width: 675px;
+
+                border: solid rgb(6, 6, 192) 3px;
+                border-radius: 10px;
+                background-color: white;
+            }
+            footer, header{
+                height: 75px;
+                width: 490px;
+
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding-left: 5px;
+                padding-right: 5px;
+
+                border: solid white 2px;
+                border-radius: 10px;
+                background-color: rgba(6, 6, 192, 0.466);
+            }
+            header{
+                height: 50px;
+                color: white;
+                justify-content: center;
+            }
+            footer > button{
+                height: 35px;
+                width: 175px;
+
+                border-radius: 7px;
+                border: solid 3px black;
+                background-color: white;
+            }
+            #commandLines{
+                height: 53px;
+                width: 150px;
+
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+
+                border: solid 3px black;
+                background-color:rgba(0, 0, 0, 0.41);
+            }
+            #commandLines > button{
+                height: inherit;
+                width: 30%;
+
+                border: solid white 1px;
+                border-radius: 3px;
+                background-color: rgb(29, 127, 188);
+            }
+            #verticalComm{
+                height: inherit;
+                width: 33%;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+
+               
+            }
+            #verticalComm > button{
+                height: 45%;
+                width: 100%;
+
+                
+                border: solid white 1px;
+                border-radius: 3px;
+                background-color: rgb(74, 179, 244);
+            }
+            footer > button:hover:not(:active),
+            #commandLines > button:hover:not(:active),
+            #verticalComm > button:hover:not(:active){
+                filter: brightness(0.7);
+                
+            }
+            footer > button:active,
+            #commandLines > button:active,
+            #verticalComm > button:active{
+                filter: none;
+                border: solid 2px gold;
+            }
+
+            #guyState {
+                width: 125px;
+                height: 125px;
+                position: relative;
+                top: 250px;
+                left: 3px;
+            }
+        </style>
+    </head>
+    <body>
+        <header><p>Make him move </p></header>
+        <main>
+            <!-- <img src="walking-guy.gif" alt="A GIF displaying a guy walking confidently, with one hand in his pocket."> -->
+        </main>
+        <footer>
+            <button id="guy">Click Me</button>
+            <div id="commandLines">
+                <button id="leftCommand">⬅</button>
+                <div id="verticalComm">
+                    <button id="up">⬆</button>
+                    <button id="down">⬇</button>
+                </div>
+                <button id="rightCommand">&#8594</button>
+            </div>
+        </footer>
+        <script>
+            const main = document.querySelector("main");
+
+            const guyBtn = document.getElementById("guy");
+            const upBtn = document.getElementById("up");
+            const downBtn = document.getElementById("down");
+            const leftBtn = document.getElementById("leftCommand");
+            const rightBtn = document.getElementById("rightCommand");
+
+            guyBtn.addEventListener("click", state);
+            upBtn.addEventListener("click", Jump);
+            downBtn.addEventListener("click", stand);
+            leftBtn.addEventListener("click", turn);
+            rightBtn.addEventListener("click", advance);
+
+            // ----- make the guy appear and desappear-------
+            const img = document.createElement("img");
+            img.src = "walking-guy.gif";
+            img.alt = "A GIF displaying a guy walking confidently, with one hand in his pocket.";
+            img.id = "guyState";
+            let isVisible = false;
+            function state(){
+                if(!isVisible) {
+                    main.appendChild(img);
+                    isVisible = true;
+                } else {
+                    img.remove();
+                    isVisible = false;
+                }
+            } 
+            function Jump() {
+                if (isVisible) {
+                    img.style.transition = "top 0.3s ease-out";
+                    img.style.top = "-25px";
+                    setTimeout(()=> {
+                        img.style.transition = "top 0.3s ease-in";
+                        img.style.top = "250px";
+                    }, 200)
+                }
+            }
+            let isStanding = false;
+            function stand() {
+                if (!isVisible) return;
+
+                if (isStanding) {
+                    img.src = "walking-guy.gif";
+                    img.alt = "A GIF displaying a guy walking confidently, with one hand in his pocket.";
+                    isStanding = false;
+                } else {
+                    img.src = "standing-guy.png";
+                    img.alt = "guy standing";
+                    isStanding = true;
+                }
+            }
+            let x = 3;
+            function advance() {
+                if (isVisible){
+                    img.style.transform = "None";
+                    const mainWidth = main.clientWidth;
+                    const guyWidth = img.clientWidth;
+                    if (x + guyWidth + 10 < mainWidth) {
+                        x +=20;
+                        img.style.left = x + "px";
+                    }Z
+                }
+            }
+            function turn() {
+                if (isVisible) {
+                    img.style.transform = "scaleX(-1)";
+                    if (x - 20 >= 0) {
+                        x -= 20;
+                        img.style.left = x + "px";
+                    }
+                }
+            }           
+        </script>
+    </body>
+</html>
