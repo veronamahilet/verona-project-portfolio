@@ -1,0 +1,170 @@
+<!-- API stands for Application Programming Interface -->
+<!--application: Any software that a specific functionality to provides  -->
+<!-- Interface: contract between two sowftware components.(how do they talk together) -->
+ <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>my Weather App</title>
+
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                $("button").click(function(){
+                    // css animation
+                    
+                    // API call
+                    let zipCode = $("input").val();
+                    var url = "https://api.openweathermap.org/data/2.5/weather?zip=" + zipCode +",us&appid=9feab0f86a06d87b85dd66698dee4f33&units=imperial";
+                    $.ajax({
+                        method: "GET",
+                        url: url,
+                        dataType: "json",
+                        success: function(data){
+                            $("main").css("visibility", "visible");
+                            isHidden = true;
+                            console.log(data);
+                            $("#cityName").text(data.name);
+                            $("#currentLocationCondition").text(data.weather[0].main);
+                            $("#temperature").text(Math.round(data.main.temp) + "°F");
+                            $("#humidity").text(data.main.humidity);
+                            $("#windSpeed").text(data.wind.speed);
+                            $("#pressure").text(data.main.pressure);
+                            $("main").addClass("showWeather");
+                        },
+                        error: function(){
+                            alert("An error occurred while fetching the weather data. Please check the zip code and try again.");
+                        }
+                    })
+                    $("input").val("");
+                });
+            });
+
+        </script>
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+            }
+            body{
+                height: 100vh;
+                width: 100vw;
+                background-color: rgb(91, 38, 38);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                align-items: center;
+                
+            }
+            main{
+                background-color: rgba(255, 255, 255, 0.064);
+                width: 50%;
+                height: 50%;
+                border: solid 3px white;
+                border-radius: 25px;
+                box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.562);
+                color: white;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                align-items: center;
+                visibility: hidden;
+                /* animation properties */
+                /* animation-name: smooth;
+                animation-duration: 1s;
+                animation-timing-function: ease-in;
+                animation-delay: 0.5s;
+                animation-iteration-count: 1;
+                animation-direction: normal;
+                animation-fill-mode: both;
+                animation-play-state: running; */
+                /* animation-timeline: ; view for when the content is in the vew point of the user */
+                /* animation-range: entry 0% cover 50%; to make the animation only when it start enter the view point, cover until 50% of the view point */
+            }
+            main.showWeather{
+                animation-name: smooth;
+                animation-duration: 1s;
+                animation-timing-function: ease;
+                animation-delay: 0s;
+                animation-iteration-count: 1;
+                animation-direction: normal;
+                animation-fill-mode: forwards;
+                animation-play-state: running;
+            }
+            main:hover{
+                animation-play-state: paused;
+            }
+            @keyframes smooth {
+                from{
+                    transform: translateY(500px);
+                    opacity: 0;
+                    scale: 0.5;
+                }
+                to{
+                    transform: translateY(0px);
+                    opacity: 1;
+                    scale: 1;
+                }
+            }
+            div{
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                width: 80%;
+            }
+            .fieldBoxes{
+                font-weight: bolder;
+            }
+            footer{
+                width: 75%;
+                height: 70px;
+                border: solid 3px white;
+                padding-left: 15px;
+                padding-right: 15px;
+                border-radius: 25px;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            input{
+                width: 75%;
+                height: 50px;
+                border: solid 3px white;
+                border-radius: 25px;
+                padding-left: 15px;
+                background-color: transparent;
+                color: white;
+                font-size: 16px;
+            }
+            button{
+                width: 20%;
+                height: 50px;
+                border: solid 3px black;
+                border-radius: 25px;
+                background-color: white;
+                color: black;
+                font-size: 16px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <div class="fieldBoxes"><p>City Name:</p> <p id="cityName"></p></div>
+            <div class="fieldBoxes"><p>Current Location Condition:</p><p id="currentLocationCondition"></p></div>
+            <div class="fieldBoxes"><p>Temperature:</p><p id="temperature"></p></div>
+            <div class="fieldBoxes"><p>Humidity:</p><p id="humidity"></p></div>
+            <div class="fieldBoxes"><p>Wind Speed:</p><p id="windSpeed"></p></div>
+            <div class="fieldBoxes"><p>Pressure:</p><p id="pressure"></p></div>
+        </main>
+        <footer>
+            <input placeholder="Enter zip Code" type="text">
+            <button>Submit</button>
+        </footer>
+        
+    </body>
+</html>
