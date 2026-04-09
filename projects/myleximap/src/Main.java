@@ -50,6 +50,7 @@ public class Main extends Application {
     private Label FLayerCenter_lbl_guide;
     private Label lbl_lftB_TopB_InfoWrdsProcessValue;
     private Label lbl_lftB_TopB_InfoUnquWrdsValue;
+    private Label FLayerCenter_lbl_seeSentence;
 
     @Override
     public void start(Stage stage) {
@@ -284,7 +285,7 @@ public class Main extends Application {
         // ======== column 1-3 (FLayerCenter): add VBox ========
         FLayerCenter_lbl_guide = new Label("Please enter a text to train the machine ");
         FLayerCenter_lbl_guide.getStyleClass().add("FLayerCenter_lbl_guide"); // css class
-        Label FLayerCenter_lbl_seeSentence = new Label("See the text here:");
+        FLayerCenter_lbl_seeSentence = new Label("See the text here:");
         FLayerCenter_lbl_seeSentence.getStyleClass().add("FLayerCenter_lbl_seeSentence"); // css class
         FlowPane FLayerCenter_FlowPane_sugestionArea = new FlowPane();
         FLayerCenter_FlowPane_sugestionArea.getStyleClass().add("FLayerCenter_FlowPane_sugestionArea"); // css class
@@ -312,6 +313,9 @@ public class Main extends Application {
         FLayerBottom_TextArea.setWrapText(true); // enable text wrapping
         FLayerBottom_TextArea.getStyleClass().add("FLayerBottom_TextArea"); // css class
         FLayerBottom_TextArea.setPromptText("Enter your search prompt here...");
+        FLayerBottom_TextArea.textProperty().addListener((observable, oldValue, newValue)->FLayerCenter_lbl_seeSentence.setText(newValue)); // add a listener so FLayerCenter_lbl_seeSentence will have the value inside FLayerBottom_TextArea in real time.
+        FLayerCenter_lbl_seeSentence.setVisible(false); // set FLayerCenter_lbl_seeSentence false as the user is not suppose to see what's going on there for now - personal design choice
+        FLayerCenter_lbl_seeSentence.setManaged(false); // ignore FLayerCenter_lbl_seeSentence from the layout for now. - personal design choice 
         VBox FLayerBottom_VBox = new VBox();
         FLayerBottom_VBox.getStyleClass().add("FLayerBottom_VBox"); // css class
         Button FLayerBottom_SubmitBtn = new Button("submit");
@@ -357,7 +361,7 @@ public class Main extends Application {
                     // 3. Clear TextArea 
                     String textInput = FLayerBottom_TextArea.getText();
                     handlingData(textInput); 
-                    lbl_lftB_TopB_InfoStatusValue.setText("store input...");
+                    lbl_lftB_TopB_InfoStatusValue.setText("Training in progress....");
                     lbl_lftB_TopB_InfoWrdsProcessValue.setText(
                         Integer.toString(wordsProcessed(textInput))
                     );
@@ -365,10 +369,16 @@ public class Main extends Application {
                         Integer.toString(uniqueWords(textInput))
                     );
                     FLayerBottom_TextArea.clear();
+                    FLayerCenter_lbl_seeSentence.setVisible(true);
+                    FLayerCenter_lbl_seeSentence.setManaged(true);
+                    FLayerBottom_TextArea.setStyle("-fx-text-fill: Transparent;");
                     currentStage = AppStage.PREDICTION_INPUT;
                     break;  
                 case PREDICTION_INPUT:
-                    // code for taking the user input for prediction 
+                    // code for taking the user input for prediction
+                    FLayerCenter_lbl_guide.setText("Type a word or a sentence");
+                    
+ 
                     //---
                     currentStage = AppStage.BUILDING;
                     break;
@@ -389,7 +399,7 @@ public class Main extends Application {
                     BufferedWriter writer = new BufferedWriter(new FileWriter("Data.txt", true)); // true for append mode: avoid the old text to be be deleted
                     writer.write(Input);
                     writer.close();
-                    FLayerCenter_lbl_guide.setText("Wait, Training in progress...");
+                    FLayerCenter_lbl_guide.setText("Type a words or sentence for for suggestions");
                     System.out.println("Text saved to file successfully.");
                     // ----- UI: status-value label - "Training In Progress"
                     // clear textarea 
