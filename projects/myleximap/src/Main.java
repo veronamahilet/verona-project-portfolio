@@ -3,6 +3,10 @@
 // 1. : General revie (start refresher) - https://www.youtube.com/watch?v=9XJicRt_FaI
 // 2. : javaFx Layout - https://www.youtube.com/watch?v=GH-3YRAuHs0
 // 3. : GridPane (selected layout root for first layer) - https://www.youtube.com/watch?v=YtKF1JKtRWM
+// java Logic 
+// 1. : enum - https://www.youtube.com/watch?v=BIOxWAfaAgw
+// 2. : scanner/Buffer - https://www.youtube.com/watch?v=bwHr9G5VIls
+// 3. : write&read files -https://www.youtube.com/watch?v=ScUJx4aWRi0
 
 // Biguining of the code
 import javafx.application.Application;
@@ -22,13 +26,31 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.control.Label;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+// java import
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashSet;
 
 public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
     }
+
+    public enum AppStage {
+            TRAINING,
+            PREDICTION_INPUT,
+            BUILDING
+        } // the different stages of the machine 
+    private AppStage currentStage = AppStage.TRAINING;
     
+    private TextArea FLayerBottom_TextArea;
+    private Label lbl_lftB_TopB_InfoStatusValue;
+    private Label FLayerCenter_lbl_guide;
+    private Label lbl_lftB_TopB_InfoWrdsProcessValue;
+    private Label lbl_lftB_TopB_InfoUnquWrdsValue;
+
     @Override
     public void start(Stage stage) {
         // JAVAFX APPLICATION STRUCTURE
@@ -115,7 +137,7 @@ public class Main extends Application {
         lftB_TopB_InfoHBox_status.getStyleClass().add("lftB_TopB_InfoHBox_status"); // css class
         Label lbl_lftB_TopB_InfoStatus = new Label("Status: ");
         lbl_lftB_TopB_InfoStatus.getStyleClass().add("lbl_lftB_TopB_InfoStatus"); // css class 
-        Label lbl_lftB_TopB_InfoStatusValue = new Label("Idle");
+        lbl_lftB_TopB_InfoStatusValue = new Label("Idle");
         lbl_lftB_TopB_InfoStatusValue.getStyleClass().add("lbl_lftB_TopB_InfoStatusValue"); // css class
         lftB_TopB_InfoHBox_status.setSpacing(85);
         lftB_TopB_InfoHBox_status.getChildren().addAll(lbl_lftB_TopB_InfoStatus, lbl_lftB_TopB_InfoStatusValue);
@@ -124,7 +146,7 @@ public class Main extends Application {
         lftB_TopB_InfoHBox_WrdsProcess.getStyleClass().add("lftB_TopB_InfoHBox_WrdsProcess"); // css class
         Label lbl_lftB_TopB_InfoWrdsProcess = new Label("Words Processed: ");
         lbl_lftB_TopB_InfoWrdsProcess.getStyleClass().add("lbl_lftB_TopB_InfoWrdsProcess"); // css class
-        Label lbl_lftB_TopB_InfoWrdsProcessValue = new Label("0");
+        lbl_lftB_TopB_InfoWrdsProcessValue = new Label("0");
         lbl_lftB_TopB_InfoWrdsProcessValue.getStyleClass().add("lbl_lftB_TopB_InfoWrdsProcessValue"); // css class
         lftB_TopB_InfoHBox_WrdsProcess.setSpacing(15);
         lftB_TopB_InfoHBox_WrdsProcess.getChildren().addAll(lbl_lftB_TopB_InfoWrdsProcess, lbl_lftB_TopB_InfoWrdsProcessValue);
@@ -133,7 +155,7 @@ public class Main extends Application {
         lftB_TopB_InfoHBox_UnquWrds.getStyleClass().add("lftB_TopB_InfoHBox_UnquWrds"); // css class
         Label lbl_lftB_TopB_InfoUnquWrds = new Label("Unique Words: ");
         lbl_lftB_TopB_InfoUnquWrds.getStyleClass().add("lbl_lftB_TopB_InfoUnquWrds"); // css class
-        Label lbl_lftB_TopB_InfoUnquWrdsValue = new Label("0");
+        lbl_lftB_TopB_InfoUnquWrdsValue = new Label("0");
         lbl_lftB_TopB_InfoUnquWrdsValue.getStyleClass().add("lbl_lftB_TopB_InfoUnquWrdsValue"); // css class
         lftB_TopB_InfoHBox_UnquWrds.setSpacing(31);
         lftB_TopB_InfoHBox_UnquWrds.getChildren().addAll(lbl_lftB_TopB_InfoUnquWrds, lbl_lftB_TopB_InfoUnquWrdsValue);
@@ -260,7 +282,7 @@ public class Main extends Application {
         lbl_LftB_BottomB_SrchTime_InfoHashMapValue.setPrefWidth(modelColWidth);
 
         // ======== column 1-3 (FLayerCenter): add VBox ========
-        Label FLayerCenter_lbl_guide = new Label("Please enter a text to train the machine ");
+        FLayerCenter_lbl_guide = new Label("Please enter a text to train the machine ");
         FLayerCenter_lbl_guide.getStyleClass().add("FLayerCenter_lbl_guide"); // css class
         Label FLayerCenter_lbl_seeSentence = new Label("See the text here:");
         FLayerCenter_lbl_seeSentence.getStyleClass().add("FLayerCenter_lbl_seeSentence"); // css class
@@ -286,7 +308,8 @@ public class Main extends Application {
         FLayerCenter.getChildren().addAll(FLayerCenter_lbl_guide, FLayerCenter_lbl_seeSentence, FLayerCenter_FlowPane_sugestionArea);
         
         // FLayerBottom
-        TextArea FLayerBottom_TextArea = new TextArea();
+        FLayerBottom_TextArea = new TextArea();
+        FLayerBottom_TextArea.setWrapText(true); // enable text wrapping
         FLayerBottom_TextArea.getStyleClass().add("FLayerBottom_TextArea"); // css class
         FLayerBottom_TextArea.setPromptText("Enter your search prompt here...");
         VBox FLayerBottom_VBox = new VBox();
@@ -317,15 +340,77 @@ public class Main extends Application {
         stage.show();
 
 
+        // ================================Machine Logic========================================
+        FLayerBottom_SubmitBtn.setOnAction(e -> {
+            switch (currentStage) {
+                case TRAINING: 
+                    // UI updates for the training stage
+                    // 1. change the status-value label (left top side - first HBox) to "Training Needed"
+                    lbl_lftB_TopB_InfoStatusValue.setText("Training Needed");
+                    // 2. change the info label label (center side - first Hbox) to "Please SUBMIT a TEXT to train the machine"
+                    FLayerCenter_lbl_guide.setText("Please SUBMIT a TEXT to train the machine");
 
-
-        // Machine Logic 
-        enum AppStage {
-            TRAINING,
-            PREDICTION_INPUT,
-            BUILDING
+                    // functions for handling datas 
+                    // 1. get text from TextArea (bottom side )
+                    // ----- UI: status-value label - "Training In Progress"
+                    // 2. Train the model 
+                    // 3. Clear TextArea 
+                    String textInput = FLayerBottom_TextArea.getText();
+                    handlingData(textInput); 
+                    lbl_lftB_TopB_InfoStatusValue.setText("store input...");
+                    lbl_lftB_TopB_InfoWrdsProcessValue.setText(
+                        Integer.toString(wordsProcessed(textInput))
+                    );
+                    lbl_lftB_TopB_InfoUnquWrdsValue.setText(
+                        Integer.toString(uniqueWords(textInput))
+                    );
+                    FLayerBottom_TextArea.clear();
+                    currentStage = AppStage.PREDICTION_INPUT;
+                    break;  
+                case PREDICTION_INPUT:
+                    // code for taking the user input for prediction 
+                    //---
+                    currentStage = AppStage.BUILDING;
+                    break;
+                case BUILDING:
+                    // code for building the machine (creating the data structure and training it)
+                    break;
         }
+        });
     }
+    public void handlingData(String Input){
+            // ----- UI: status-value label - "Training In Progress"
+            // 2. Train the model - save the text in a file 
+            try {
+                if (Input.isEmpty()) {
+                    System.out.println("No Text Entered.");
+                    FLayerCenter_lbl_guide.setText("No Text Entered. Please enter a text to train the machine.");
+                } else {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter("Data.txt", true)); // true for append mode: avoid the old text to be be deleted
+                    writer.write(Input);
+                    writer.close();
+                    FLayerCenter_lbl_guide.setText("Wait, Training in progress...");
+                    System.out.println("Text saved to file successfully.");
+                    // ----- UI: status-value label - "Training In Progress"
+                    // clear textarea 
+                }
+            } catch (IOException e){
+                e.printStackTrace();
+            } 
+        }
+        public int wordsProcessed(String Input){
+            String[] words = Input.split(" ");
+            return words.length;
+        }
+        public int uniqueWords(String Input){
+            // HashSet: Data Stucture that store unique element 
+            HashSet<String> set = new HashSet<>();
+            String[] words = Input.trim().split("\\s+");
+            for(String word : words) {
+                set.add(word);
+            }
+            return set.size();
+        }
 }
 
 // =========================Documentation======================================
